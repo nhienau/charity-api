@@ -14,8 +14,9 @@ public class DonationMapper {
         dto.setCampaign(CampaignMapper.mapToCampaignDto(d.getCampaign()));
         dto.setDonor(DonorMapper.mapToDonorDto(d.getDonor()));
         dto.setAmount(d.getAmount());
-        dto.setShowIdentity(d.isShowIdentity());
         dto.setCreatedAt(d.getCreatedAt());
+        dto.setTransactionId(d.getTransactionId());
+        dto.setDonorNameId(d.getDonorNameId());
         return dto;
     }
 
