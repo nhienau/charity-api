@@ -22,4 +22,10 @@ public class DonationServiceImpl implements DonationService {
         return list.stream().map(d -> DonationMapper.mapToDonationDto(d)).collect(Collectors.toList());
     }
 
+    @Override
+    public void insert(DonationDTO d) {
+        donationRepository.insert(d.getCampaign().getId(), d.getDonor().getId(), d.getAmount(), d.getCreatedAt(), d.getTransactionId(),
+                d.getDonorNameId());
+    }
+
 }

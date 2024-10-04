@@ -2,6 +2,7 @@ package com.test.charity_api.mapper;
 
 import com.test.charity_api.dto.DonationDTO;
 import com.test.charity_api.entity.Donation;
+import java.text.ParseException;
 
 public class DonationMapper {
 
@@ -18,6 +19,21 @@ public class DonationMapper {
         dto.setTransactionId(d.getTransactionId());
         dto.setDonorNameId(d.getDonorNameId());
         return dto;
+    }
+
+    public static Donation mapToDonation(DonationDTO dto) throws ParseException {
+        if (dto == null) {
+            return null;
+        }
+        Donation d = new Donation();
+        d.setId(dto.getId());
+        d.setCampaign(CampaignMapper.mapToCampaign(dto.getCampaign()));
+        d.setDonor(DonorMapper.mapToDonor(dto.getDonor()));
+        d.setAmount(dto.getAmount());
+        d.setCreatedAt(dto.getCreatedAt());
+        d.setDonorNameId(dto.getDonorNameId());
+        d.setTransactionId(dto.getTransactionId());
+        return d;
     }
 
 }

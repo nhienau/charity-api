@@ -13,5 +13,6 @@ public class DonorNameDTO {
 
     private int id;
     private String name;
+    private DonorDTO donor;
 
 }

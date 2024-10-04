@@ -26,10 +26,10 @@ public class Donation {
     @GeneratedValue
     private int id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id")
+    @JoinColumn(name = "campaign_id", nullable = false)
     private Campaign campaign;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "donor_id")
+    @JoinColumn(name = "donor_id", nullable = false)
     private Donor donor;
     @Column
     private long amount;
@@ -38,6 +38,6 @@ public class Donation {
     private Date createdAt;
     @Column
     private String transactionId;
-    @Column
+    @Column(nullable = true)
     private Integer donorNameId;
 }

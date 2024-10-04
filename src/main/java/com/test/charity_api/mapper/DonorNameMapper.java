@@ -14,4 +14,15 @@ public class DonorNameMapper {
         dto.setName(dn.getName());
         return dto;
     }
+
+    public static DonorName mapToDonorName(DonorNameDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        DonorName dn = new DonorName();
+        dn.setId(dto.getId());
+        dn.setName(dto.getName());
+        dn.setDonor(DonorMapper.mapToDonor(dto.getDonor()));
+        return dn;
+    }
 }
