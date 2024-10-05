@@ -16,5 +16,5 @@ public interface CampaignService {
 
     public CampaignResponse getCampaigns(int pageNo, int pageSize, String query);
     
-    public void updateCurrentAmount(int id, long amount);
+    public void updateDonation(int id, long amount);
 }

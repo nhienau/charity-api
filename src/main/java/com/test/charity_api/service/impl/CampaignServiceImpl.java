@@ -72,9 +72,10 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    public void updateCurrentAmount(int id, long amount) {
+    public void updateDonation(int id, long amount) {
         Campaign c = campaignRepository.findByStatusTrueAndId(id);
         c.setCurrentAmount(c.getCurrentAmount() + amount);
+        c.setDonationCount(c.getDonationCount() + 1);
         campaignRepository.save(c);
     }
 }

@@ -141,6 +141,6 @@ public class PaymentController {
         donation.setTransactionId(transactionId);
         donation.setDonorNameId(showIdentity ? donorName.getId() : null);
         donationService.insert(donation);
-        campaignService.updateCurrentAmount(campaignId, amount);
+        campaignService.updateDonation(campaignId, amount);
     }
 }
