@@ -38,6 +38,7 @@ public class Donation {
     private Date createdAt;
     @Column
     private String transactionId;
-    @Column(nullable = true)
-    private Integer donorNameId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "donor_name_id")
+    private DonorName donorName;
 }

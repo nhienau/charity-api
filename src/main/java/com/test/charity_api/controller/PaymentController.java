@@ -139,7 +139,7 @@ public class PaymentController {
         Date createdAt = new Date(serverTime);
         donation.setCreatedAt(createdAt);
         donation.setTransactionId(transactionId);
-        donation.setDonorNameId(showIdentity ? donorName.getId() : null);
+        donation.setDonorName(donorName);
         donationService.insert(donation);
         campaignService.updateDonation(campaignId, amount);
     }
