@@ -8,7 +8,7 @@ import lombok.Data;
 public class DonorDTO {
 
     private int id;
-    private String name;
+    private String phoneNumber;
     private boolean status;
 
     private List<DonationDTO> donation = new ArrayList<>();
@@ -16,9 +16,9 @@ public class DonorDTO {
     public DonorDTO() {
     }
 
-    public DonorDTO(int id, String name, boolean status) {
+    public DonorDTO(int id, String phoneNumber, boolean status) {
         this.id = id;
-        this.name = name;
+        this.phoneNumber = phoneNumber;
         this.status = status;
     }
 }

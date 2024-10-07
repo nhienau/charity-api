@@ -1,16 +1,27 @@
 package com.test.charity_api.controller;
 
+import com.test.charity_api.dto.CampaignDTO;
+import com.test.charity_api.dto.DonationDTO;
+import com.test.charity_api.dto.DonorDTO;
+import com.test.charity_api.dto.DonorNameDTO;
 import com.test.charity_api.dto.zalopay.CallbackRequest;
 import com.test.charity_api.dto.zalopay.PaymentUrlRequest;
 import com.test.charity_api.dto.zalopay.PaymentUrlResponse;
+import com.test.charity_api.mapper.ZaloPayMapper;
+import com.test.charity_api.service.CampaignService;
+import com.test.charity_api.service.DonationService;
+import com.test.charity_api.service.DonorNameService;
+import com.test.charity_api.service.DonorService;
 import com.test.charity_api.service.ZaloPayService;
-import com.test.charity_api.util.zalopay.Config;
 import jakarta.xml.bind.DatatypeConverter;
+import java.util.Date;
 import java.util.logging.Logger;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,13 +35,27 @@ public class PaymentController {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private Mac HmacSHA256;
+    private final String zalopayKey2;
 
     @Autowired
     private ZaloPayService zalopayService;
 
-    public PaymentController() throws Exception {
+    @Autowired
+    private DonorService donorService;
+
+    @Autowired
+    private DonorNameService donorNameService;
+
+    @Autowired
+    private DonationService donationService;
+
+    @Autowired
+    private CampaignService campaignService;
+
+    public PaymentController(@Value("${zalopay.key2}") String zalopayKey2) throws Exception {
+        this.zalopayKey2 = zalopayKey2;
         HmacSHA256 = Mac.getInstance("HmacSHA256");
-        HmacSHA256.init(new SecretKeySpec(Config.MERCHANT_INFO.get("key2").getBytes(), "HmacSHA256"));
+        HmacSHA256.init(new SecretKeySpec(this.zalopayKey2.getBytes(), "HmacSHA256"));
     }
 
     @PostMapping("/zalopay/getPaymentUrl")
@@ -59,7 +84,12 @@ public class PaymentController {
                 // merchant cập nhật trạng thái cho đơn hàng
                 JSONObject dataObj = new JSONObject(data);
                 String donationInfoStr = dataObj.getString("item");
-                // Update
+                JSONArray jsonArr = new JSONArray(donationInfoStr);
+                JSONObject jsonObj = jsonArr.getJSONObject(0);
+                long serverTime = dataObj.getLong("server_time");
+                String transactionId = dataObj.getString("app_trans_id");
+                PaymentUrlRequest req = ZaloPayMapper.toPaymentUrlRequestDto(jsonObj);
+                handleNewDonation(req, serverTime, transactionId);
 
                 result.put("return_code", 1);
                 result.put("return_message", "success");
@@ -73,4 +103,44 @@ public class PaymentController {
         return result.toString();
     }
 
+    public void handleNewDonation(PaymentUrlRequest data, long serverTime, String transactionId) {
+        int campaignId = data.getCampaignId();
+        String phoneNumber = data.getPhoneNumber();
+        String name = data.getName();
+        boolean showIdentity = data.isShowIdentity();
+        long amount = data.getAmount();
+
+        DonorDTO donor = donorService.findByPhoneNumber(phoneNumber);
+        if (donor == null) {
+            DonorDTO temp = new DonorDTO();
+            temp.setPhoneNumber(phoneNumber);
+            temp.setStatus(true);
+            donor = donorService.insertDonor(temp);
+        }
+
+        int donorId = donor.getId();
+        DonorNameDTO donorName = null;
+        if (showIdentity) {
+            donorName = donorNameService.findByNameAndDonorId(name, donorId);
+            if (donorName == null) {
+                DonorNameDTO temp = new DonorNameDTO();
+                temp.setName(name);
+                temp.setDonor(donor);
+                donorName = donorNameService.insert(temp);
+            }
+        }
+
+        CampaignDTO campaign = campaignService.findById(campaignId);
+
+        DonationDTO donation = new DonationDTO();
+        donation.setCampaign(campaign);
+        donation.setDonor(donor);
+        donation.setAmount(amount);
+        Date createdAt = new Date(serverTime);
+        donation.setCreatedAt(createdAt);
+        donation.setTransactionId(transactionId);
+        donation.setDonorName(donorName);
+        donationService.insert(donation);
+        campaignService.updateDonation(campaignId, amount);
+    }
 }

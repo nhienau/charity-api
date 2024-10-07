@@ -70,4 +70,12 @@ public class CampaignServiceImpl implements CampaignService {
         response.setLast(result.isLast());
         return response;
     }
+
+    @Override
+    public void updateDonation(int id, long amount) {
+        Campaign c = campaignRepository.findByStatusTrueAndId(id);
+        c.setCurrentAmount(c.getCurrentAmount() + amount);
+        c.setDonationCount(c.getDonationCount() + 1);
+        campaignRepository.save(c);
+    }
 }

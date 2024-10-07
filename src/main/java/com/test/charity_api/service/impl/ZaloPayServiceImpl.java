@@ -5,7 +5,6 @@ import com.test.charity_api.dto.zalopay.PaymentUrlResponse;
 import com.test.charity_api.mapper.ZaloPayMapper;
 import com.test.charity_api.service.ZaloPayService;
 import com.test.charity_api.util.DateTimeUtil;
-import com.test.charity_api.util.zalopay.Config;
 import com.test.charity_api.util.zalopay.HMACUtil;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -23,10 +22,22 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ZaloPayServiceImpl implements ZaloPayService {
+
+    @Value("${zalopay.redirect-base-url}")
+    private String redirectBaseUrl;
+    @Value("${zalopay.app-id}")
+    private String appId;
+    @Value("${zalopay.callback-url}")
+    private String callbackUrl;
+    @Value("${zalopay.key1}")
+    private String key1;
+    @Value("${zalopay.endpoint}")
+    private String endpoint;
 
     @Override
     public PaymentUrlResponse getPaymentUrl(PaymentUrlRequest requestBody) throws Exception {
@@ -34,7 +45,7 @@ public class ZaloPayServiceImpl implements ZaloPayService {
         int random_id = rand.nextInt(1000000);
         final Map embed_data = new HashMap() {
             {
-                put("redirecturl", Config.REDIRECT_BASE_URL + "/" + requestBody.getCampaignId());
+                put("redirecturl", redirectBaseUrl + "/" + requestBody.getCampaignId());
             }
         };
 
@@ -46,7 +57,7 @@ public class ZaloPayServiceImpl implements ZaloPayService {
 
         Map<String, Object> order = new HashMap<String, Object>() {
             {
-                put("app_id", Config.MERCHANT_INFO.get("app_id"));
+                put("app_id", appId);
                 put("app_trans_id", DateTimeUtil.getCurrentTimeString("yyMMdd") + "_" + random_id); // translation missing: vi.docs.shared.sample_code.comments.app_trans_id
                 put("app_time", System.currentTimeMillis()); // miliseconds
                 put("app_user", "app_user");
@@ -55,7 +66,7 @@ public class ZaloPayServiceImpl implements ZaloPayService {
                 put("bank_code", "");
                 put("item", jsonItem);
                 put("embed_data", new JSONObject(embed_data).toString());
-                put("callback_url", Config.CALLBACK_URL);
+                put("callback_url", callbackUrl);
                 put("title", "Quyen gop tu thien SGU #" + random_id);
             }
         };
@@ -63,10 +74,10 @@ public class ZaloPayServiceImpl implements ZaloPayService {
         // app_id +”|”+ app_trans_id +”|”+ appuser +”|”+ amount +"|" + app_time +”|”+ embed_data +"|" +item
         String data = order.get("app_id") + "|" + order.get("app_trans_id") + "|" + order.get("app_user") + "|" + order.get("amount")
                 + "|" + order.get("app_time") + "|" + order.get("embed_data") + "|" + order.get("item");
-        order.put("mac", HMACUtil.HMacHexStringEncode(HMACUtil.HMACSHA256, Config.MERCHANT_INFO.get("key1"), data));
+        order.put("mac", HMACUtil.HMacHexStringEncode(HMACUtil.HMACSHA256, key1, data));
 
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost post = new HttpPost(Config.ENDPOINT);
+        HttpPost post = new HttpPost(endpoint);
 
         List<NameValuePair> params = new ArrayList<>();
         for (Map.Entry<String, Object> e : order.entrySet()) {

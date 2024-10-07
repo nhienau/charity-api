@@ -29,4 +29,9 @@ public interface CampaignRepository extends JpaRepository<Campaign, Integer> {
     Campaign findByStatusTrueAndId(int id);
 
     Page<Campaign> findByStatusTrueAndNameContainingOrderByCreatedAtDesc(String query, Pageable pageable);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Campaign c SET c.currentAmount = :amount WHERE c.id = :id")
+    void updateCurrentAmount(@Param("id") int id, @Param("amount") long amount);
 }

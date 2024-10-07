@@ -11,8 +11,19 @@ public class DonorMapper {
         }
         DonorDTO dto = new DonorDTO();
         dto.setId(d.getId());
-        dto.setName(d.getName());
+        dto.setPhoneNumber(d.getPhoneNumber());
         dto.setStatus(d.isStatus());
         return dto;
+    }
+
+    public static Donor mapToDonor(DonorDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        Donor d = new Donor();
+        d.setId(dto.getId());
+        d.setPhoneNumber(dto.getPhoneNumber());
+        d.setStatus(dto.isStatus());
+        return d;
     }
 }

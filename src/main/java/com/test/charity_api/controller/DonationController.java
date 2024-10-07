@@ -1,10 +1,10 @@
 package com.test.charity_api.controller;
 
-import com.test.charity_api.dto.DonationDTO;
+import com.test.charity_api.dto.DonationResponse;
 import com.test.charity_api.service.DonationService;
-import com.test.charity_api.util.DonationIdentity;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/donation")
 public class DonationController {
-    
+
     @Autowired
     private DonationService donationService;
-    
+
     @GetMapping("/getCampaignDonation")
-    public List<DonationDTO> getCampaignDonation(@RequestParam Long campaignId) {
-        List<DonationDTO> result = donationService.getDonation(campaignId);
-        List<DonationDTO> list = DonationIdentity.toggleDonationIdentity(result);
-        return list;
+    public ResponseEntity<DonationResponse> getCampaignDonation(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "campaignId", required = true) Long campaignId) {
+        return new ResponseEntity<>(donationService.getDonation(pageNo, pageSize, campaignId), HttpStatus.OK);
     }
 }

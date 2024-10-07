@@ -21,21 +21,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Donation {
-    
+
     @Id
     @GeneratedValue
     private int id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id")
+    @JoinColumn(name = "campaign_id", nullable = false)
     private Campaign campaign;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "donor_id")
+    @JoinColumn(name = "donor_id", nullable = false)
     private Donor donor;
     @Column
     private long amount;
     @Column
-    private boolean showIdentity;
-    @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+    @Column
+    private String transactionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "donor_name_id")
+    private DonorName donorName;
 }
