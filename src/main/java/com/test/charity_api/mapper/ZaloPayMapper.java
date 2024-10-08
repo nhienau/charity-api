@@ -2,6 +2,7 @@ package com.test.charity_api.mapper;
 
 import com.test.charity_api.dto.zalopay.PaymentUrlRequest;
 import com.test.charity_api.dto.zalopay.PaymentUrlResponse;
+import com.test.charity_api.util.HtmlUtil;
 import java.util.HashMap;
 import org.json.JSONObject;
 
@@ -12,7 +13,7 @@ public class ZaloPayMapper {
             {
                 put("campaignId", req.getCampaignId());
                 put("phoneNumber", req.getPhoneNumber());
-                put("name", req.getName());
+                put("name", HtmlUtil.escapeHTML(req.getName()));
                 put("showIdentity", req.isShowIdentity());
                 put("amount", req.getAmount());
             }
