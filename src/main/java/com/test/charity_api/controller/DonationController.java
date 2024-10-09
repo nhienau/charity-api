@@ -21,7 +21,8 @@ public class DonationController {
     public ResponseEntity<DonationResponse> getCampaignDonation(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "campaignId", required = true) Long campaignId) {
-        return new ResponseEntity<>(donationService.getDonation(pageNo, pageSize, campaignId), HttpStatus.OK);
+            @RequestParam(value = "campaignId", required = true) Long campaignId,
+            @RequestParam(value = "name", defaultValue = "", required = false) String name) {
+        return new ResponseEntity<>(donationService.getDonation(pageNo, pageSize, campaignId, name), HttpStatus.OK);
     }
 }

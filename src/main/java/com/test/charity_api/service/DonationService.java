@@ -5,7 +5,7 @@ import com.test.charity_api.dto.DonationResponse;
 
 public interface DonationService {
 
-    public DonationResponse getDonation(int pageNo, int pageSize, Long campaignId);
+    public DonationResponse getDonation(int pageNo, int pageSize, Long campaignId, String name);
 
     public void insert(DonationDTO d);
 }

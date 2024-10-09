@@ -21,9 +21,19 @@ public class DonationServiceImpl implements DonationService {
     private DonationRepository donationRepository;
 
     @Override
-    public DonationResponse getDonation(int pageNo, int pageSize, Long campaignId) {
+    public DonationResponse getDonation(int pageNo, int pageSize, Long campaignId, String name) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Donation> result = donationRepository.findByCampaignIdOrderByCreatedAtDesc(campaignId, pageable);
+        Page<Donation> result = null;
+        
+        String queryStr = name.trim().toLowerCase();
+        if (queryStr.isEmpty()) {
+            result = donationRepository.findByCampaignIdOrderByCreatedAtDesc(campaignId, pageable);
+        } else if ("nhà hảo tâm".contains(queryStr) || "nha hao tam".contains(queryStr)) {
+            result = donationRepository.findByCampaignIdAndDonorNameIncludeAnonymousName(campaignId, queryStr, pageable);
+        } else {
+            result = donationRepository.findByCampaignIdAndDonorName(campaignId, queryStr, pageable);
+        }
+
         List<DonationDTO> content = result.getContent().stream()
                 .map(d -> DonationMapper.mapToDonationDto(d, false, false, false))
                 .collect(Collectors.toList());
