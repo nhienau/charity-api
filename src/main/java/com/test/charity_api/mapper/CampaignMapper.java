@@ -20,8 +20,10 @@ public class CampaignMapper {
         entity.setName(c.getName());
         entity.setDescription(c.getDescription());
         entity.setCreatedAt(c.getCreatedAt());
-        Date closeDate = DateTimeUtil.stringToDate(c.getCloseDateStr());
-        entity.setCloseDate(closeDate);
+        if (c.getCloseDateStr() != null) {
+            Date closeDate = DateTimeUtil.stringToDate(c.getCloseDateStr());
+            entity.setCloseDate(closeDate);
+        }
         entity.setTargetAmount(c.getTargetAmount());
         entity.setCurrentAmount(c.getCurrentAmount());
         entity.setDonationCount(c.getDonationCount());
@@ -45,6 +47,7 @@ public class CampaignMapper {
         entity.setCurrentAmount(c.getCurrentAmount());
         entity.setDonationCount(c.getDonationCount());
         entity.setPostId(c.getPostId());
+        entity.setCreatedBy(c.getCreatedBy().getId());
         entity.setStatus(c.isStatus());
         return entity;
     }

@@ -15,7 +15,7 @@ public class DonorNameServiceImpl implements DonorNameService {
     private DonorNameRepository donorNameRepository;
 
     @Override
-    public DonorNameDTO findByNameAndDonorId(String name, int donorId) {
+    public DonorNameDTO findByNameAndDonorId(String name, String donorId) {
         DonorName dn = donorNameRepository.findByNameAndDonorId(name, donorId);
         return DonorNameMapper.mapToDonorNameDto(dn);
     }

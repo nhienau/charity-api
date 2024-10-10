@@ -6,6 +6,7 @@ import com.test.charity_api.entity.Donation;
 import com.test.charity_api.mapper.DonationMapper;
 import com.test.charity_api.repository.DonationRepository;
 import com.test.charity_api.service.DonationService;
+import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,19 @@ public class DonationServiceImpl implements DonationService {
     private DonationRepository donationRepository;
 
     @Override
-    public DonationResponse getDonation(int pageNo, int pageSize, Long campaignId) {
+    public DonationResponse getDonation(int pageNo, int pageSize, Long campaignId, String name) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Donation> result = donationRepository.findByCampaignIdOrderByCreatedAtDesc(campaignId, pageable);
+        Page<Donation> result = null;
+
+        String queryStr = name.trim().toLowerCase();
+        if (queryStr.isEmpty()) {
+            result = donationRepository.findByCampaignIdOrderByCreatedAtDesc(campaignId, pageable);
+        } else if ("nhà hảo tâm".contains(queryStr) || "nha hao tam".contains(queryStr)) {
+            result = donationRepository.findByCampaignIdAndDonorNameIncludeAnonymousName(campaignId, queryStr, pageable);
+        } else {
+            result = donationRepository.findByCampaignIdAndDonorName(campaignId, queryStr, pageable);
+        }
+
         List<DonationDTO> content = result.getContent().stream()
                 .map(d -> DonationMapper.mapToDonationDto(d, false, false, false))
                 .collect(Collectors.toList());
@@ -39,10 +50,14 @@ public class DonationServiceImpl implements DonationService {
     }
 
     @Override
-    public void insert(DonationDTO d) {
-        Integer donorNameId = d.getDonorName() == null ? null : d.getDonorName().getId();
-        donationRepository.insert(d.getCampaign().getId(), d.getDonor().getId(), d.getAmount(), d.getCreatedAt(), d.getTransactionId(),
-                donorNameId);
+    public void insert(DonationDTO d) throws ParseException {
+        Donation entity = null;
+        try {
+            entity = DonationMapper.mapToDonation(d);
+        } catch (ParseException ex) {
+            throw ex;
+        }
+        donationRepository.save(entity);
     }
 
 }

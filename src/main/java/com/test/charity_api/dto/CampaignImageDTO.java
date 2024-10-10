@@ -1,5 +1,8 @@
 package com.test.charity_api.dto;
 
+import lombok.Data;
+
+@Data
 public class CampaignImageDTO {
 
     private int id;

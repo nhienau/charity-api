@@ -24,13 +24,13 @@ public class Account {
     @Id
     @GeneratedValue
     private int id;
-    @Column
+    @Column(nullable = false)
     private String username;
-    @Column
+    @Column(nullable = false)
     private String password;
-    @Column
+    @Column(nullable = false)
     private boolean status;
-    
+
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Campaign> campaign = new ArrayList<>();

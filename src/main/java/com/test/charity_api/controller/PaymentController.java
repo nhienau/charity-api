@@ -16,6 +16,7 @@ import com.test.charity_api.service.ZaloPayService;
 import com.test.charity_api.util.HtmlUtil;
 import jakarta.xml.bind.DatatypeConverter;
 import java.util.Date;
+import java.util.UUID;
 import java.util.logging.Logger;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -33,45 +34,45 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/payment")
 public class PaymentController {
-    
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private Mac HmacSHA256;
     private final String zalopayKey2;
-    
+
     @Autowired
     private ZaloPayService zalopayService;
-    
+
     @Autowired
     private DonorService donorService;
-    
+
     @Autowired
     private DonorNameService donorNameService;
-    
+
     @Autowired
     private DonationService donationService;
-    
+
     @Autowired
     private CampaignService campaignService;
-    
+
     public PaymentController(@Value("${zalopay.key2}") String zalopayKey2) throws Exception {
         this.zalopayKey2 = zalopayKey2;
         HmacSHA256 = Mac.getInstance("HmacSHA256");
         HmacSHA256.init(new SecretKeySpec(this.zalopayKey2.getBytes(), "HmacSHA256"));
     }
-    
+
     @PostMapping("/zalopay/getPaymentUrl")
     public ResponseEntity<PaymentUrlResponse> getPaymentUrl(@RequestBody PaymentUrlRequest params) throws Exception {
         return new ResponseEntity<>(zalopayService.getPaymentUrl(params), HttpStatus.OK);
     }
-    
+
     @PostMapping("/zalopay/callback")
     public String callback(@RequestBody CallbackRequest callbackData) {
         JSONObject result = new JSONObject();
-        
+
         try {
             String data = callbackData.getData();
             String reqMac = callbackData.getMac();
-            
+
             byte[] hashBytes = HmacSHA256.doFinal(data.getBytes());
             String mac = DatatypeConverter.printHexBinary(hashBytes).toLowerCase();
 
@@ -91,7 +92,7 @@ public class PaymentController {
                 String transactionId = dataObj.getString("app_trans_id");
                 PaymentUrlRequest req = ZaloPayMapper.toPaymentUrlRequestDto(jsonObj);
                 handleNewDonation(req, serverTime, transactionId);
-                
+
                 result.put("return_code", 1);
                 result.put("return_message", "success");
             }
@@ -103,23 +104,24 @@ public class PaymentController {
         // thông báo kết quả cho ZaloPay server
         return result.toString();
     }
-    
+
     public void handleNewDonation(PaymentUrlRequest data, long serverTime, String transactionId) {
         int campaignId = data.getCampaignId();
         String phoneNumber = data.getPhoneNumber();
         String name = HtmlUtil.unescapeHTML(data.getName());
         boolean showIdentity = data.isShowIdentity();
         long amount = data.getAmount();
-        
+
         DonorDTO donor = donorService.findByPhoneNumber(phoneNumber);
         if (donor == null) {
             DonorDTO temp = new DonorDTO();
+            temp.setId(UUID.randomUUID().toString());
             temp.setPhoneNumber(phoneNumber);
             temp.setStatus(true);
             donor = donorService.insertDonor(temp);
         }
-        
-        int donorId = donor.getId();
+
+        String donorId = donor.getId();
         DonorNameDTO donorName = null;
         if (showIdentity) {
             donorName = donorNameService.findByNameAndDonorId(name, donorId);
@@ -130,9 +132,9 @@ public class PaymentController {
                 donorName = donorNameService.insert(temp);
             }
         }
-        
+
         CampaignDTO campaign = campaignService.findById(campaignId);
-        
+
         DonationDTO donation = new DonationDTO();
         donation.setCampaign(campaign);
         donation.setDonor(donor);
@@ -141,7 +143,12 @@ public class PaymentController {
         donation.setCreatedAt(createdAt);
         donation.setTransactionId(transactionId);
         donation.setDonorName(donorName);
-        donationService.insert(donation);
+        System.out.println(donation.toString());
+        try {
+            donationService.insert(donation);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         campaignService.updateDonation(campaignId, amount);
     }
 }
