@@ -4,7 +4,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
@@ -22,11 +21,12 @@ import lombok.NoArgsConstructor;
 public class Donor {
 
     @Id
-    @GeneratedValue
-    private int id;
+    private String id;
+    @Column
+    private String password;
     @Column
     private String phoneNumber;
-    @Column
+    @Column(nullable = false)
     private boolean status;
 
     @Builder.Default

@@ -31,14 +31,14 @@ public class Donation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "donor_id", nullable = false)
     private Donor donor;
-    @Column
+    @Column(nullable = false)
     private long amount;
-    @Column
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    @Column
+    @Column(nullable = false)
     private String transactionId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "donor_name_id")
+    @JoinColumn(name = "donor_name_id", nullable = true)
     private DonorName donorName;
 }

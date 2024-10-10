@@ -23,14 +23,21 @@ public class CampaignServiceImpl implements CampaignService {
     private CampaignRepository campaignRepository;
 
     @Override
-    public void createCampaign(CampaignDTO campaignDTO) {
+    public void createCampaign(CampaignDTO req) {
+        CampaignDTO temp = new CampaignDTO();
+        temp.setName(req.getName());
+        temp.setDescription(req.getDescription());
+        temp.setCloseDateStr(req.getCloseDateStr());
+        temp.setTargetAmount(req.getTargetAmount());
+        temp.setCreatedBy(req.getCreatedBy());
+        temp.setPostId(req.getPostId());
         Campaign c = new Campaign();
         try {
-            c = CampaignMapper.mapToCampaign(campaignDTO);
+            c = CampaignMapper.mapToCampaign(temp);
         } catch (ParseException ex) {
             ex.printStackTrace();
         }
-        campaignRepository.createCampaign(c.getName(), c.getDescription(), c.getCloseDate(), c.getTargetAmount(), c.getCreatedBy().getId());
+        campaignRepository.save(c);
     }
 
     @Override

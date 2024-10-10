@@ -29,25 +29,25 @@ public class Campaign {
     @Id
     @GeneratedValue
     private int id;
-    @Column
+    @Column(nullable = false)
     private String name;
-    @Column
+    @Column(nullable = false)
     private String description;
-    @Column
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    @Column
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date closeDate;
-    @Column
+    @Column(nullable = false)
     private long targetAmount;
-    @Column
+    @Column(nullable = false)
     private long currentAmount;
-    @Column
+    @Column(nullable = false)
     private int donationCount;
     @Column
-    private int postId;
-    @Column
+    private Integer postId;
+    @Column(nullable = false)
     private boolean status;
 
     @Builder.Default
@@ -59,6 +59,6 @@ public class Campaign {
     private List<CampaignImage> campaignImage = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by")
+    @JoinColumn(name = "created_by", nullable = false)
     private Account createdBy;
 }

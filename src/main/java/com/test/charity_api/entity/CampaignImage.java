@@ -22,9 +22,9 @@ public class CampaignImage {
     @Id
     @GeneratedValue
     private int id;
-    @Column
+    @Column(nullable = false)
     private String url;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id")
+    @JoinColumn(name = "campaign_id", nullable = false)
     private Campaign campaign;
 }

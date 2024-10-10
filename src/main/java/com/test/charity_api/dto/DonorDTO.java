@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class DonorDTO {
 
-    private int id;
+    private String id;
+    private String password;
     private String phoneNumber;
     private boolean status;
 
@@ -16,8 +17,9 @@ public class DonorDTO {
     public DonorDTO() {
     }
 
-    public DonorDTO(int id, String phoneNumber, boolean status) {
+    public DonorDTO(String id, String password, String phoneNumber, boolean status) {
         this.id = id;
+        this.password = password;
         this.phoneNumber = phoneNumber;
         this.status = status;
     }

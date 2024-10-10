@@ -26,11 +26,11 @@ public class DonorName {
     @Id
     @GeneratedValue
     private int id;
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "donor_id")
+    @JoinColumn(name = "donor_id", nullable = false)
     private Donor donor;
 
     @Builder.Default

@@ -8,5 +8,5 @@ import org.springframework.data.repository.query.Param;
 public interface DonorNameRepository extends JpaRepository<DonorName, Long> {
 
     @Query("SELECT dn FROM DonorName dn WHERE dn.donor.id = :donorId AND dn.name = :name")
-    DonorName findByNameAndDonorId(@Param("name") String name, @Param("donorId") int donorId);
+    DonorName findByNameAndDonorId(@Param("name") String name, @Param("donorId") String donorId);
 }

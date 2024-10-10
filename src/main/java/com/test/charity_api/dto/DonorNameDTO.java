@@ -17,9 +17,10 @@ public class DonorNameDTO {
 
     }
 
-    public DonorNameDTO(int id, String name) {
+    public DonorNameDTO(int id, String name, DonorDTO donor) {
         this.id = id;
         this.name = name;
+        this.donor = donor;
     }
 
 }
