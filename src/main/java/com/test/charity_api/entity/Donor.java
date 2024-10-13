@@ -29,6 +29,8 @@ public class Donor {
     private String password;
     @Column
     private String phoneNumber;
+    @Column
+    private String defaultName;
     @Column(nullable = false)
     private boolean status;
 
