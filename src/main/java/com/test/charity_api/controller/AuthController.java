@@ -1,10 +1,10 @@
 package com.test.charity_api.controller;
 
 import com.test.charity_api.dto.AuthResponseDTO;
+import com.test.charity_api.dto.DonorDTO;
 import com.test.charity_api.dto.LoginDTO;
-import com.test.charity_api.repository.DonorRepository;
-import com.test.charity_api.repository.RoleRepository;
 import com.test.charity_api.security.JWTGenerator;
+import com.test.charity_api.service.DonorService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,24 +28,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private AuthenticationManager authenticationManager;
-    private DonorRepository donorRepository;
-    private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
     private JWTGenerator jwtGenerator;
+    private DonorService donorService;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, DonorRepository donorRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator) {
+    public AuthController(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator, DonorService donorService) {
         this.authenticationManager = authenticationManager;
-        this.donorRepository = donorRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtGenerator = jwtGenerator;
+        this.donorService = donorService;
     }
 
-//    @GetMapping("/register")
-//    public ResponseEntity<String> register() {
-//        return new ResponseEntity<>(passwordEncoder.encode("123456"), HttpStatus.OK);
-//    }
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDto, HttpServletResponse response) {
@@ -63,4 +59,22 @@ public class AuthController {
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<DonorDTO> getUserInfo(@CookieValue("accessToken") String token) {
+        String username = jwtGenerator.getUsernameFromJWT(token);
+        DonorDTO donor = donorService.findById(username);
+
+        return new ResponseEntity<>(donor, HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(@CookieValue("accessToken") String token, HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", "");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie.setSecure(false);
+        response.addCookie(cookie);
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
 }

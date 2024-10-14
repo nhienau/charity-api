@@ -5,6 +5,7 @@ import com.test.charity_api.entity.Donor;
 import com.test.charity_api.mapper.DonorMapper;
 import com.test.charity_api.repository.DonorRepository;
 import com.test.charity_api.service.DonorService;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,12 @@ public class DonorServiceImpl implements DonorService {
         Donor temp = DonorMapper.mapToDonor(d);
         Donor saved = donorRepository.save(temp);
         return DonorMapper.mapToDonorDto(saved);
+    }
+
+    @Override
+    public DonorDTO findById(String id) {
+        Optional<Donor> temp = donorRepository.findById(id);
+        return DonorMapper.mapToDonorDto(temp.get());
     }
 
 }
