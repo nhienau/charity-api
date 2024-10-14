@@ -17,6 +17,7 @@ public class DonationMapper {
         dto.setAmount(d.getAmount());
         dto.setCreatedAt(d.getCreatedAt());
         dto.setTransactionId(d.getTransactionId());
+        dto.setShowIdentity(d.isShowIdentity());
         dto.setDonorName(DonorNameMapper.mapToDonorNameDto(d.getDonorName()));
         return dto;
     }
@@ -38,6 +39,7 @@ public class DonationMapper {
         if (mapTransactionId) {
             dto.setTransactionId(d.getTransactionId());
         }
+        dto.setShowIdentity(d.isShowIdentity());
         dto.setDonorName(DonorNameMapper.mapToDonorNameDto(d.getDonorName()));
         return dto;
     }
@@ -54,6 +56,7 @@ public class DonationMapper {
         d.setCreatedAt(dto.getCreatedAt());
         d.setDonorName(DonorNameMapper.mapToDonorName(dto.getDonorName()));
         d.setTransactionId(dto.getTransactionId());
+        d.setShowIdentity(dto.isShowIdentity());
         return d;
     }
 

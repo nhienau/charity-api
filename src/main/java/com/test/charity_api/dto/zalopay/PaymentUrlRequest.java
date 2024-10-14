@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class PaymentUrlRequest {
 
     private int campaignId;
+    private String donorId;
     private String phoneNumber;
     private String name;
     private boolean showIdentity;

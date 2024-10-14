@@ -39,6 +39,8 @@ public class Donation {
     private Date createdAt;
     @Column(nullable = false)
     private String transactionId;
+    @Column(nullable = false)
+    private boolean showIdentity;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "donor_name_id", nullable = true)
     private DonorName donorName;

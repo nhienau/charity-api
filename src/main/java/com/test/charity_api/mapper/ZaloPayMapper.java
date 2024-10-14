@@ -12,6 +12,7 @@ public class ZaloPayMapper {
         return new HashMap() {
             {
                 put("campaignId", req.getCampaignId());
+                put("donorId", req.getDonorId());
                 put("phoneNumber", req.getPhoneNumber());
                 put("name", HtmlUtil.escapeHTML(req.getName()));
                 put("showIdentity", req.isShowIdentity());
@@ -25,6 +26,10 @@ public class ZaloPayMapper {
 
         if (obj.has("campaignId")) {
             dto.setCampaignId(obj.getInt("campaignId"));
+        }
+
+        if (obj.has("donorId")) {
+            dto.setDonorId(obj.getString("donorId"));
         }
 
         if (obj.has("phoneNumber")) {
