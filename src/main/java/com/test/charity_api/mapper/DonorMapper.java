@@ -19,6 +19,18 @@ public class DonorMapper {
         return dto;
     }
 
+    public static DonorDTO mapToDonorDto(Donor d, boolean mapName) {
+        if (d == null) {
+            return null;
+        }
+        DonorDTO dto = new DonorDTO();
+        if (mapName) {
+            dto.setDefaultName(d.getDefaultName());
+        }
+        dto.setStatus(d.isStatus());
+        return dto;
+    }
+
     public static Donor mapToDonor(DonorDTO dto) {
         if (dto == null) {
             return null;

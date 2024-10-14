@@ -22,7 +22,7 @@ public class DonationMapper {
         return dto;
     }
 
-    public static DonationDTO mapToDonationDto(Donation d, boolean mapCampaign, boolean mapDonor, boolean mapTransactionId) {
+    public static DonationDTO mapToDonationDto(Donation d, boolean mapCampaign, boolean mapDonor, boolean mapDonorNameOnly, boolean mapTransactionId) {
         if (d == null) {
             return null;
         }
@@ -32,7 +32,7 @@ public class DonationMapper {
             dto.setCampaign(CampaignMapper.mapToCampaignDto(d.getCampaign()));
         }
         if (mapDonor) {
-            dto.setDonor(DonorMapper.mapToDonorDto(d.getDonor()));
+            dto.setDonor(DonorMapper.mapToDonorDto(d.getDonor(), d.isShowIdentity()));
         }
         dto.setAmount(d.getAmount());
         dto.setCreatedAt(d.getCreatedAt());
