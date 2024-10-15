@@ -29,6 +29,7 @@ public class CampaignMapper {
         entity.setDonationCount(c.getDonationCount());
         entity.setPostId(c.getPostId());
         entity.setCreatedBy(createdBy);
+        entity.setLecturer(LecturerMapper.mapToLecturer(c.getLecturer()));
         entity.setStatus(c.isStatus());
         return entity;
     }
@@ -48,6 +49,7 @@ public class CampaignMapper {
         entity.setDonationCount(c.getDonationCount());
         entity.setPostId(c.getPostId());
         entity.setCreatedBy(c.getCreatedBy().getId());
+        entity.setLecturer(LecturerMapper.mapToLecturerDto(c.getLecturer()));
         entity.setStatus(c.isStatus());
         return entity;
     }

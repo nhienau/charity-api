@@ -17,11 +17,12 @@ public class DonationMapper {
         dto.setAmount(d.getAmount());
         dto.setCreatedAt(d.getCreatedAt());
         dto.setTransactionId(d.getTransactionId());
+        dto.setShowIdentity(d.isShowIdentity());
         dto.setDonorName(DonorNameMapper.mapToDonorNameDto(d.getDonorName()));
         return dto;
     }
 
-    public static DonationDTO mapToDonationDto(Donation d, boolean mapCampaign, boolean mapDonor, boolean mapTransactionId) {
+    public static DonationDTO mapToDonationDto(Donation d, boolean mapCampaign, boolean mapDonor, boolean mapDonorNameOnly, boolean mapTransactionId) {
         if (d == null) {
             return null;
         }
@@ -31,13 +32,14 @@ public class DonationMapper {
             dto.setCampaign(CampaignMapper.mapToCampaignDto(d.getCampaign()));
         }
         if (mapDonor) {
-            dto.setDonor(DonorMapper.mapToDonorDto(d.getDonor()));
+            dto.setDonor(DonorMapper.mapToDonorDto(d.getDonor(), d.isShowIdentity()));
         }
         dto.setAmount(d.getAmount());
         dto.setCreatedAt(d.getCreatedAt());
         if (mapTransactionId) {
             dto.setTransactionId(d.getTransactionId());
         }
+        dto.setShowIdentity(d.isShowIdentity());
         dto.setDonorName(DonorNameMapper.mapToDonorNameDto(d.getDonorName()));
         return dto;
     }
@@ -54,6 +56,7 @@ public class DonationMapper {
         d.setCreatedAt(dto.getCreatedAt());
         d.setDonorName(DonorNameMapper.mapToDonorName(dto.getDonorName()));
         d.setTransactionId(dto.getTransactionId());
+        d.setShowIdentity(dto.isShowIdentity());
         return d;
     }
 

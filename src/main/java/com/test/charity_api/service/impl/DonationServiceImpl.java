@@ -36,7 +36,7 @@ public class DonationServiceImpl implements DonationService {
         }
 
         List<DonationDTO> content = result.getContent().stream()
-                .map(d -> DonationMapper.mapToDonationDto(d, false, false, false))
+                .map(d -> DonationMapper.mapToDonationDto(d, false, true, true, false))
                 .collect(Collectors.toList());
 
         DonationResponse response = new DonationResponse();

@@ -7,8 +7,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,19 +20,18 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class DonorName {
+public class Lecturer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(nullable = false)
     private String name;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "donor_id", nullable = false)
-    private Donor donor;
+    @Column(nullable = false)
+    private boolean status;
 
     @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "donorName", cascade = CascadeType.ALL)
-    private List<Donation> donation = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lecturer", cascade = CascadeType.ALL)
+    private List<Campaign> campaign = new ArrayList<>();
+
 }

@@ -17,12 +17,13 @@ public class CampaignDTO {
     private int donationCount = 0;
     private Integer postId;
     private int createdBy;
+    private LecturerDTO lecturer;
     private boolean status = true;
 
     public CampaignDTO() {
     }
 
-    public CampaignDTO(int id, String name, String description, Date createdAt, Date closeDate, String closeDateStr, long targetAmount, long currentAmount, int donationCount, Integer postId, int createdBy, boolean status) {
+    public CampaignDTO(int id, String name, String description, Date createdAt, Date closeDate, String closeDateStr, long targetAmount, long currentAmount, int donationCount, Integer postId, int createdBy, LecturerDTO lecturer, boolean status) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -34,6 +35,7 @@ public class CampaignDTO {
         this.donationCount = donationCount;
         this.postId = postId;
         this.createdBy = createdBy;
+        this.lecturer = lecturer;
         this.status = status;
     }
 

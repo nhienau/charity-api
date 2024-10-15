@@ -7,4 +7,6 @@ public interface DonorService {
     public DonorDTO findByPhoneNumber(String phoneNumber);
 
     public DonorDTO insertDonor(DonorDTO d);
+
+    public DonorDTO findById(String id);
 }

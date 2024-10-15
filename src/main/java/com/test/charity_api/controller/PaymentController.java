@@ -107,23 +107,29 @@ public class PaymentController {
 
     public void handleNewDonation(PaymentUrlRequest data, long serverTime, String transactionId) {
         int campaignId = data.getCampaignId();
+        String reqDonorId = data.getDonorId();
         String phoneNumber = data.getPhoneNumber();
         String name = HtmlUtil.unescapeHTML(data.getName());
         boolean showIdentity = data.isShowIdentity();
         long amount = data.getAmount();
 
-        DonorDTO donor = donorService.findByPhoneNumber(phoneNumber);
-        if (donor == null) {
-            DonorDTO temp = new DonorDTO();
-            temp.setId(UUID.randomUUID().toString());
-            temp.setPhoneNumber(phoneNumber);
-            temp.setStatus(true);
-            donor = donorService.insertDonor(temp);
+        DonorDTO donor = null;
+        if (reqDonorId != null) {
+            donor = donorService.findById(reqDonorId);
+        } else {
+            donor = donorService.findByPhoneNumber(phoneNumber);
+            if (donor == null) {
+                DonorDTO temp = new DonorDTO();
+                temp.setId(UUID.randomUUID().toString());
+                temp.setPhoneNumber(phoneNumber);
+                temp.setStatus(true);
+                donor = donorService.insertDonor(temp);
+            }
         }
 
         String donorId = donor.getId();
         DonorNameDTO donorName = null;
-        if (showIdentity) {
+        if (reqDonorId == null && showIdentity) {
             donorName = donorNameService.findByNameAndDonorId(name, donorId);
             if (donorName == null) {
                 DonorNameDTO temp = new DonorNameDTO();
@@ -142,6 +148,7 @@ public class PaymentController {
         Date createdAt = new Date(serverTime);
         donation.setCreatedAt(createdAt);
         donation.setTransactionId(transactionId);
+        donation.setShowIdentity(showIdentity);
         donation.setDonorName(donorName);
         System.out.println(donation.toString());
         try {
