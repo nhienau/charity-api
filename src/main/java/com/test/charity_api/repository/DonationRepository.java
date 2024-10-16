@@ -11,7 +11,14 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
 
     Page<Donation> findByCampaignIdOrderByCreatedAtDesc(Long campaignId, Pageable pageable);
 
-    @Query("SELECT d FROM Donation d WHERE d.campaign.id = :campaignId AND d.donorName.name LIKE %:name% ORDER BY d.createdAt DESC")
+    @Query("""
+           SELECT d
+           FROM Donation d
+            LEFT JOIN d.donorName dn
+           WHERE d.campaign.id = :campaignId
+            AND (dn.name LIKE %:name% OR (d.showIdentity = true AND dn IS NULL AND d.donor.defaultName LIKE %:name%))
+           ORDER BY d.createdAt DESC
+           """)
     Page<Donation> findByCampaignIdAndDonorName(@Param("campaignId") Long campaignId, @Param("name") String name, Pageable pageable);
 
     @Query("""
@@ -19,7 +26,9 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
            FROM Donation d
            LEFT JOIN d.donorName dn
            WHERE d.campaign.id = :campaignId
-           AND ((d.donorName.name LIKE %:name%) OR (d.donorName IS NULL))
+           AND ((d.donorName.name LIKE %:name%) 
+            OR (d.showIdentity = true AND dn IS NULL AND d.donor.defaultName LIKE %:name%)
+            OR (d.showIdentity = false))
            ORDER BY d.createdAt DESC
            """)
     Page<Donation> findByCampaignIdAndDonorNameIncludeAnonymousName(@Param("campaignId") Long campaignId, @Param("name") String name, Pageable pageable);
