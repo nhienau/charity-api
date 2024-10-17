@@ -3,6 +3,8 @@ package com.test.charity_api.controller;
 import com.test.charity_api.dto.CampaignDTO;
 import com.test.charity_api.dto.CampaignResponse;
 import com.test.charity_api.service.CampaignService;
+import com.test.charity_api.service.CloudinaryService;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/campaign")
@@ -20,6 +23,9 @@ public class CampaignController {
 
     @Autowired
     private CampaignService campaignService;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @GetMapping("/getAll")
     public ResponseEntity<CampaignResponse> getCampaigns(
@@ -47,4 +53,10 @@ public class CampaignController {
         campaignService.deleteCampaign(id);
         return "success";
     }
+
+//    @PostMapping("/upload")
+//    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+//        String url = cloudinaryService.uploadFile(file);
+//        return new ResponseEntity<>(url, HttpStatus.CREATED);
+//    }
 }
