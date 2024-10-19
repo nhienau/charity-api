@@ -1,10 +1,15 @@
 package com.test.charity_api.controller;
 
 import com.test.charity_api.dto.CampaignDTO;
+import com.test.charity_api.dto.CampaignImageDTO;
 import com.test.charity_api.dto.CampaignResponse;
+import com.test.charity_api.dto.ImageIdsRequest;
+import com.test.charity_api.service.CampaignImageService;
 import com.test.charity_api.service.CampaignService;
 import com.test.charity_api.service.CloudinaryService;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +28,9 @@ public class CampaignController {
 
     @Autowired
     private CampaignService campaignService;
+
+    @Autowired
+    private CampaignImageService campaignImageService;
 
     @Autowired
     private CloudinaryService cloudinaryService;
@@ -54,9 +62,21 @@ public class CampaignController {
         return "success";
     }
 
-//    @PostMapping("/upload")
-//    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
-//        String url = cloudinaryService.uploadFile(file);
-//        return new ResponseEntity<>(url, HttpStatus.CREATED);
-//    }
+    @PostMapping("/uploadImages")
+    public ResponseEntity<List<CampaignImageDTO>> uploadImages(@RequestParam("files") List<MultipartFile> files, @RequestParam("campaignId") int campaignId) throws IOException {
+        List<CampaignImageDTO> results = new ArrayList<>();
+        for (MultipartFile f : files) {
+            String url = cloudinaryService.uploadFile(f);
+            CampaignImageDTO result = campaignImageService.add(url, campaignId);
+            results.add(result);
+        }
+        return new ResponseEntity<>(results, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/deleteImages")
+    public ResponseEntity<?> deleteImages(@RequestBody ImageIdsRequest req) {
+        List<Integer> ids = req.getImageIds();
+        campaignImageService.delete(ids);
+        return new ResponseEntity<>(ids, HttpStatus.OK);
+    }
 }

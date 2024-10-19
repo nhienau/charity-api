@@ -41,4 +41,13 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         return convFile;
     }
 
+    @Override
+    public void delete(String publicId) {
+        try {
+            cloudinaryConfig.uploader().destroy(publicId, ObjectUtils.asMap("asset_folder", "charity"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
