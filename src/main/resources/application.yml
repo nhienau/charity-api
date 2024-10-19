@@ -6,19 +6,28 @@ server:
 spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        username: root
-        url: jdbc:mysql://localhost:3306/charity
-        password: 
+        username: ${DB_USERNAME}
+        url: ${DB_URL}
+        password: ${DB_PASSWORD}
     jpa:
         hibernate:
             ddl-auto: update
         show-sql: true
         open-in-view: true
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
 
 zalopay:
     app-id: 2554
-    key1: sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn
-    key2: trMrHtvjo6myautxDUiAcYsVtaeQ8nhf
+    key1: ${ZALOPAY_KEY1}
+    key2: ${ZALOPAY_KEY2}
     endpoint: https://sb-openapi.zalopay.vn/v2/create
-    redirect-base-url: http://localhost:5173/campaign
-    callback-url: https://9420-42-119-148-176.ngrok-free.app/payment/zalopay/callback
+    redirect-base-url: ${ZALOPAY_REDIRECT_BASE_URL}
+    callback-url: ${ZALOPAY_CALLBACK_URL}
+    
+cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}

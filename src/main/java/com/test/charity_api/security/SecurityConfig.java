@@ -1,6 +1,10 @@
 package com.test.charity_api.security;
 
+import com.cloudinary.Cloudinary;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +20,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${cloudinary.cloud-name}")
+    private String cloudinaryCloudName;
+    @Value("${cloudinary.api-key}")
+    private String cloudinaryApiKey;
+    @Value("${cloudinary.api-secret}")
+    private String cloudinaryApiSecret;
 
     private JwtAuthEntryPoint authEntryPoint;
     private CustomUserDetailsService userDetailsService;
@@ -33,7 +44,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeHttpRequests)
                         -> authorizeHttpRequests.requestMatchers("/**").permitAll()
-//                        .anyRequest().authenticated()
+                //                        .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -52,5 +63,16 @@ public class SecurityConfig {
     @Bean
     public JWTAuthenticationFilter jwtAuthenticationFilter() {
         return new JWTAuthenticationFilter();
+    }
+
+    @Bean
+    public Cloudinary cloudinaryConfig() {
+        Cloudinary cloudinary = null;
+        Map config = new HashMap();
+        config.put("cloud_name", cloudinaryCloudName);
+        config.put("api_key", cloudinaryApiKey);
+        config.put("api_secret", cloudinaryApiSecret);
+        cloudinary = new Cloudinary(config);
+        return cloudinary;
     }
 }

@@ -6,6 +6,7 @@ import com.test.charity_api.entity.Campaign;
 import com.test.charity_api.util.DateTimeUtil;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class CampaignMapper {
 
@@ -50,6 +51,7 @@ public class CampaignMapper {
         entity.setPostId(c.getPostId());
         entity.setCreatedBy(c.getCreatedBy().getId());
         entity.setLecturer(LecturerMapper.mapToLecturerDto(c.getLecturer()));
+        entity.setCampaignImage(c.getCampaignImage().stream().map(i -> CampaignImageMapper.mapToCampaignImageDto(i)).collect(Collectors.toList()));
         entity.setStatus(c.isStatus());
         return entity;
     }
