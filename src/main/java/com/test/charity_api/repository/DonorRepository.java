@@ -13,6 +13,9 @@ public interface DonorRepository extends JpaRepository<Donor, Long> {
     Donor findByStatusTrueAndPhoneNumber(String phoneNumber);
 
     Optional<Donor> findById(String username);
+    
+    @Query("SELECT d FROM Donor d WHERE d.id like :username")
+    Donor FindUser(@Param("username") String username);
 
     boolean existsById(String username);
     

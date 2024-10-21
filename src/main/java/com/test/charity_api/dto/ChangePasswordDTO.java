@@ -14,13 +14,15 @@ import lombok.Data;
 
 public class ChangePasswordDTO {
     
+    private int id;
     private String currentPassword;
     private String newPassword;
 
     public ChangePasswordDTO() {
     }
 
-    public ChangePasswordDTO(String currentPassword, String newPassword) {
+    public ChangePasswordDTO(int id ,String currentPassword, String newPassword) {
+        this.id = id;
         this.currentPassword = currentPassword;
         this.newPassword = newPassword;
     }

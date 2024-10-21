@@ -10,5 +10,7 @@ public interface DonorService {
 
     public DonorDTO findById(String id);
     
+    public DonorDTO FindUser(String username);
+    
     public void updatePassword(String username, String newPassword) throws Exception;
 }

@@ -70,13 +70,15 @@ public class AuthController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) throws Exception {
-        // Lấy thông tin người dùng từ SecurityContext
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
+    public ResponseEntity<String> changePassword(@CookieValue("accessToken") String token, @RequestBody ChangePasswordDTO changePasswordDTO) throws Exception {
+        // Lấy thông tin người dùng từ jwtGenerator
+        String currentUsername = jwtGenerator.getUsernameFromJWT(token);
 
         // Lấy thông tin người dùng từ database
-        DonorDTO donor = donorService.findById(currentUsername);
+        DonorDTO donor = donorService.FindUser(currentUsername);
+//        DonorDTO donor = donorService.findById(currentUsername);
+
+//        DonorDTO donor = donorService.findById(username);
 
         // Kiểm tra mật khẩu hiện tại
         if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), donor.getPassword())) {
