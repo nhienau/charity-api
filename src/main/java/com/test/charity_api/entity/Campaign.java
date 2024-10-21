@@ -56,7 +56,7 @@ public class Campaign {
     private List<Donation> donation = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "campaign", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "campaign", cascade = CascadeType.ALL)
     private List<CampaignImage> campaignImage = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
