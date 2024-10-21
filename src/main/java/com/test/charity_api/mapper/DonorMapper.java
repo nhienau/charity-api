@@ -30,7 +30,25 @@ public class DonorMapper {
         dto.setStatus(d.isStatus());
         return dto;
     }
-
+    
+    public static DonorDTO mapToDonorDto(Donor d, boolean mapName, boolean mapPassword) {
+        if (d == null) {
+            return null;
+        }
+        DonorDTO dto = new DonorDTO();
+        dto.setId(d.getId());
+        if (mapPassword) {
+            dto.setPassword(d.getPassword());
+        }
+        dto.setPhoneNumber(d.getPhoneNumber());
+        if (mapName) {
+            dto.setDefaultName(d.getDefaultName());
+        }
+        dto.setRole(d.getRoles().stream().map(r -> RoleMapper.mapToRoleDto(r)).collect(Collectors.toList()));
+        dto.setStatus(d.isStatus());
+        return dto;
+    }
+    
     public static Donor mapToDonor(DonorDTO dto) {
         if (dto == null) {
             return null;

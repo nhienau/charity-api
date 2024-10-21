@@ -1,10 +1,12 @@
 package com.test.charity_api.controller;
 
 import com.test.charity_api.dto.AuthResponseDTO;
+import com.test.charity_api.dto.ChangePasswordDTO;
 import com.test.charity_api.dto.DonorDTO;
 import com.test.charity_api.dto.LoginDTO;
 import com.test.charity_api.security.JWTGenerator;
 import com.test.charity_api.service.DonorService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,29 @@ public class AuthController {
         DonorDTO donor = donorService.findById(username);
 
         return new ResponseEntity<>(donor, HttpStatus.OK);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@CookieValue("accessToken") String token, @RequestBody ChangePasswordDTO changePasswordDTO) throws Exception {
+        // Lấy thông tin người dùng từ jwtGenerator
+        String currentUsername = jwtGenerator.getUsernameFromJWT(token);
+
+        // Lấy thông tin người dùng từ database
+        DonorDTO donor = donorService.FindUser(currentUsername);
+//        DonorDTO donor = donorService.findById(currentUsername);
+
+//        DonorDTO donor = donorService.findById(username);
+
+        // Kiểm tra mật khẩu hiện tại
+        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), donor.getPassword())) {
+            return new ResponseEntity<>("fail", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Cập nhật mật khẩu mới
+        String encodedNewPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
+        donorService.updatePassword(currentUsername, encodedNewPassword);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
     @GetMapping("/logout")
