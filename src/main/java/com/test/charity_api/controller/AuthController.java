@@ -6,7 +6,6 @@ import com.test.charity_api.dto.DonorDTO;
 import com.test.charity_api.dto.LoginDTO;
 import com.test.charity_api.security.JWTGenerator;
 import com.test.charity_api.service.DonorService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,9 +75,6 @@ public class AuthController {
 
         // Lấy thông tin người dùng từ database
         DonorDTO donor = donorService.FindUser(currentUsername);
-//        DonorDTO donor = donorService.findById(currentUsername);
-
-//        DonorDTO donor = donorService.findById(username);
 
         // Kiểm tra mật khẩu hiện tại
         if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), donor.getPassword())) {

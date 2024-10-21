@@ -5,10 +5,8 @@ import com.test.charity_api.entity.Donor;
 import com.test.charity_api.mapper.DonorMapper;
 import com.test.charity_api.repository.DonorRepository;
 import com.test.charity_api.service.DonorService;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,9 +14,6 @@ public class DonorServiceImpl implements DonorService {
 
     @Autowired
     private DonorRepository donorRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Override
     public DonorDTO findByPhoneNumber(String phoneNumber) {
@@ -36,7 +31,6 @@ public class DonorServiceImpl implements DonorService {
     @Override
     public DonorDTO findById(String id) {
         Optional<Donor> temp = donorRepository.findById(id);
-//        System.out.println(id + "Hello");
         return DonorMapper.mapToDonorDto(temp.get());
     }
 
@@ -48,8 +42,6 @@ public class DonorServiceImpl implements DonorService {
     @Override
     public DonorDTO FindUser(String id) {
         Donor temp = donorRepository.FindUser(id);
-        System.out.println(id + "wdwasdasd");
-        System.out.println(temp);
         return DonorMapper.mapToDonorDto(temp, true, true);
     }
 
