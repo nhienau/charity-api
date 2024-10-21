@@ -10,6 +10,7 @@ import com.test.charity_api.service.LecturerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,13 +46,13 @@ public class LecturerController {
         return "success";
     }
     
-    @PostMapping
+    @PutMapping("/update")
     public String updateLecturer(@RequestBody LecturerDTO lecturerDTO){
         lecturerService.updateLecturer(lecturerDTO);
         return "success";
     }
 
-    @PutMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteLecturer(@RequestParam int id) {
         if(!lecturerService.lecturerDoesntHaveAnyCampaign(id)){
             return "fail";

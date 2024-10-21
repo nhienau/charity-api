@@ -21,6 +21,6 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Integer> {
     
     Lecturer findByStatusTrueAndId(int id);
     
-    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Campaign c WHERE c.lecturer.id = :lecturerId AND c.closeDate > CURRENT_DATE")
+    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Campaign c WHERE c.lecturer.id = :lecturerId")
     boolean lecturerIsHavingAnActiveCampain(@Param("lecturerId") int lecturerId);
 }

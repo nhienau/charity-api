@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>run</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.vmArgs></exec.vmArgs>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.appArgs></exec.appArgs>
+                <exec.mainClass>${packageClassName}</exec.mainClass>
+                <exec.executable>java</exec.executable>
+                <Env.CLOUDINARY_CLOUD_NAME>dprbn0lu1</Env.CLOUDINARY_CLOUD_NAME>
+                <Env.CLOUDINARY_API_KEY>487256812582584</Env.CLOUDINARY_API_KEY>
+                <Env.CLOUDINARY_API_SECRET>kcuKj1BEIY2Amevxq-9Tl1zZrRQ</Env.CLOUDINARY_API_SECRET>
+                <Env.DB_USERNAME>root</Env.DB_USERNAME>
+                <Env.DB_URL>jdbc:mysql://localhost:3306/charity</Env.DB_URL>
+                <Env.DB_PASSWORD></Env.DB_PASSWORD>
+                <Env.ZALOPAY_KEY1>sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn</Env.ZALOPAY_KEY1>
+                <Env.ZALOPAY_KEY2>trMrHtvjo6myautxDUiAcYsVtaeQ8nhf</Env.ZALOPAY_KEY2>
+                <Env.ZALOPAY_REDIRECT_BASE_URL>http://localhost:5173/campaign</Env.ZALOPAY_REDIRECT_BASE_URL>
+                <Env.ZALOPAY_CALLBACK_URL>https://5167-42-119-148-176.ngrok-free.app/payment/zalopay/callback</Env.ZALOPAY_CALLBACK_URL>
+                
+            </properties>
+        </action>
+    </actions>
