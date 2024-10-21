@@ -9,4 +9,6 @@ public interface DonorService {
     public DonorDTO insertDonor(DonorDTO d);
 
     public DonorDTO findById(String id);
+    
+    public void updatePassword(String username, String newPassword) throws Exception;
 }
