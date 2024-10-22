@@ -10,11 +10,11 @@ public interface CampaignService {
 
     public CampaignDTO findById(int id);
 
-    public void createCampaign(CampaignDTO c);
+    public CampaignDTO createCampaign(CampaignDTO c);
 
     public void deleteCampaign(int id);
 
     public CampaignResponse getCampaigns(int pageNo, int pageSize, String query);
-    
+
     public void updateDonation(int id, long amount);
 }

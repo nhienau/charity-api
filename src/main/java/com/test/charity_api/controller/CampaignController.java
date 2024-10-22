@@ -51,9 +51,9 @@ public class CampaignController {
     }
 
     @PostMapping("/create")
-    public String createCampaign(@RequestBody CampaignDTO campaignDTO) {
-        campaignService.createCampaign(campaignDTO);
-        return "success";
+    public ResponseEntity<CampaignDTO> createCampaign(@RequestBody CampaignDTO campaignDTO) {
+        CampaignDTO result = campaignService.createCampaign(campaignDTO);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @PutMapping("/delete")
