@@ -22,7 +22,7 @@ public class DateTimeUtil {
     }
 
     public static boolean isISOString(String s) {
-        return checkMatch(s, "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$");
+        return checkMatch(s, "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{3})?Z$");
     }
 
     public static boolean isSQLDateString(String s) {
