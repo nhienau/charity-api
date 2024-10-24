@@ -11,11 +11,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface CampaignRepository extends JpaRepository<Campaign, Integer> {
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Campaign c SET c.status = false WHERE c.id = :id")
-    void deleteCampaign(@Param("id") int id);
-
     Campaign findByStatusTrueAndId(int id);
 
     Page<Campaign> findByStatusTrueAndNameContainingOrderByCreatedAtDesc(String query, Pageable pageable);
