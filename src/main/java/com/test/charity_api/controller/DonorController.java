@@ -1,12 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.test.charity_api.controller;
 
-import com.test.charity_api.dto.LecturerDTO;
-import com.test.charity_api.dto.LecturerResponse;
-import com.test.charity_api.service.LecturerService;
+import com.test.charity_api.dto.DonorDTO;
+import com.test.charity_api.dto.DonorResponse;
+import com.test.charity_api.service.DonorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,50 +17,50 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/lecturer")
-public class LecturerController {
+@RequestMapping("/donor")
+public class DonorController {
     @Autowired
-    private LecturerService lecturerService;
-
+    private DonorService donorService;
+    
     @GetMapping("/getAll")
-    public ResponseEntity<LecturerResponse> getLecturers(
+    public ResponseEntity<DonorResponse> getDonors(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "12", required = false) int pageSize,
             @RequestParam(value = "query", defaultValue = "", required = false) String query
     ) {
-        return new ResponseEntity<>(lecturerService.getLecturers(pageNo, pageSize, query), HttpStatus.OK);
+        return new ResponseEntity<>(donorService.getDonors(pageNo, pageSize, query), HttpStatus.OK);
     }
 
     @GetMapping("/get")
-    public ResponseEntity<LecturerDTO> getLecturer(@RequestParam int id) {
-        LecturerDTO l = lecturerService.findById(id);
+    public ResponseEntity<DonorDTO> getDonor(@RequestParam String id) {
+        DonorDTO l = donorService.findById(id);
         return new ResponseEntity<>(l, HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public String createLecturer(@RequestBody LecturerDTO lecturerDTO) {
-        lecturerService.createLecturer(lecturerDTO);
+    public String createDonor(@RequestBody DonorDTO donorDTO) {
+        if(donorService.findById(donorDTO.getId()) != null){ // trung mssv
+            return "fail";
+        }
+        donorService.createDonor(donorDTO);
         return "success";
     }
     
     @PutMapping("/update")
-    public String updateLecturer(@RequestBody LecturerDTO lecturerDTO){
-        if(lecturerService.findById(lecturerDTO.getId())==null){
+    public String updateDonor(@RequestBody DonorDTO donorDTO){
+        if(donorService.findById(donorDTO.getId()) == null){
             return "fail";
         }
-        lecturerService.updateLecturer(lecturerDTO);
+        donorService.updateDonor(donorDTO);
         return "success";
     }
 
     @DeleteMapping("/delete")
-    public String deleteLecturer(@RequestParam int id) {
-        if(lecturerService.findById(id)==null){
+    public String deleteDonor(@RequestParam String id) {
+        if(donorService.findById(id)==null){
             return "fail";
         }
-        if(!lecturerService.lecturerDoesntHaveAnyCampaign(id)){
-            return "fail";
-        }
-        lecturerService.deleteLecturer(id);
+        donorService.deleteDonor(id);
         return "success";
     }
 }
