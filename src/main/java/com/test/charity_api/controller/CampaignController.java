@@ -57,9 +57,9 @@ public class CampaignController {
     }
 
     @PutMapping("/delete")
-    public String deleteCampaign(@RequestParam int id) {
-        campaignService.deleteCampaign(id);
-        return "success";
+    public ResponseEntity<CampaignDTO> deleteCampaign(@RequestParam int id) {
+        CampaignDTO result = campaignService.deleteCampaign(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/uploadImages")
@@ -78,5 +78,11 @@ public class CampaignController {
         List<Integer> ids = req.getImageIds();
         campaignImageService.delete(ids);
         return new ResponseEntity<>(ids, HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<CampaignDTO> updateCampaign(@RequestBody CampaignDTO campaign) {
+        CampaignDTO result = campaignService.updateCampaign(campaign);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

@@ -43,8 +43,14 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    public void deleteCampaign(int id) {
-        campaignRepository.deleteCampaign(id);
+    public CampaignDTO deleteCampaign(int id) {
+        Campaign c = campaignRepository.findByStatusTrueAndId(id);
+        if (c != null && !c.isStatus()) {
+            throw new RuntimeException("No campaign found");
+        }
+        c.setStatus(false);
+        Campaign saved = campaignRepository.save(c);
+        return CampaignMapper.mapToCampaignDto(saved);
     }
 
     @Override
@@ -86,5 +92,27 @@ public class CampaignServiceImpl implements CampaignService {
         c.setCurrentAmount(c.getCurrentAmount() + amount);
         c.setDonationCount(c.getDonationCount() + 1);
         campaignRepository.save(c);
+    }
+
+    @Override
+    public CampaignDTO updateCampaign(CampaignDTO c) {
+        Campaign existingCampaign = campaignRepository.findByStatusTrueAndId(c.getId());
+        if (existingCampaign != null && !existingCampaign.isStatus()) {
+            throw new RuntimeException("No campaign found");
+        }
+        Campaign updatedInfo = null;
+        try {
+            updatedInfo = CampaignMapper.mapToCampaign(c);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        existingCampaign.setName(updatedInfo.getName());
+        existingCampaign.setDescription(updatedInfo.getDescription());
+        existingCampaign.setCloseDate(updatedInfo.getCloseDate());
+        existingCampaign.setTargetAmount(updatedInfo.getTargetAmount());
+        existingCampaign.setPostId(updatedInfo.getPostId());
+        existingCampaign.setLecturer(updatedInfo.getLecturer());
+        Campaign saved = campaignRepository.save(existingCampaign);
+        return CampaignMapper.mapToCampaignDto(saved);
     }
 }
