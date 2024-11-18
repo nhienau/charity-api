@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
+
 public interface DonationRepository extends JpaRepository<Donation, Long> {
 
     Page<Donation> findByCampaignIdOrderByCreatedAtDesc(Long campaignId, Pageable pageable);
@@ -32,5 +34,15 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
            ORDER BY d.createdAt DESC
            """)
     Page<Donation> findByCampaignIdAndDonorNameIncludeAnonymousName(@Param("campaignId") Long campaignId, @Param("name") String name, Pageable pageable);
+
+       //?
+    @Query("SELECT d FROM Donation d WHERE d.campaign.name LIKE %:campaignName% AND " +
+           "(d.donorName.name LIKE %:name%) AND " +
+           "d.createdAt BETWEEN :startDate AND :endDate")
+    Page<Donation> findByCampaignIdAndDonorNameAndDateRange(@Param("campaignName") String campaignName,
+                                                             @Param("name") String name,
+                                                             @Param("startDate") Date startDate,
+                                                             @Param("endDate") Date endDate,
+                                                             Pageable pageable);
 
 }

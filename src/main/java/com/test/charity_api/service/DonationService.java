@@ -9,4 +9,6 @@ public interface DonationService {
     public DonationResponse getDonation(int pageNo, int pageSize, Long campaignId, String name);
 
     public void insert(DonationDTO d) throws ParseException;
+
+    DonationResponse searchDonations(int pageNo, int pageSize, String campaignName, String donorName, String startDate, String endDate);
 }
