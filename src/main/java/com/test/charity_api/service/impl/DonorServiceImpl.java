@@ -8,7 +8,6 @@ import com.test.charity_api.repository.DonorRepository;
 import com.test.charity_api.service.DonorService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,7 +40,7 @@ public class DonorServiceImpl implements DonorService {
         if (d != null && !d.isStatus()) {
             return null;
         }
-        return DonorMapper.mapToDonorDto(d,true,true);
+        return DonorMapper.mapToDonorDto(d, true, false);
     }
 
     @Override
