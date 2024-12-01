@@ -18,6 +18,7 @@ import com.test.charity_api.entity.Donation;
 import com.test.charity_api.mapper.DonationMapper;
 import com.test.charity_api.repository.DonationRepository;
 import com.test.charity_api.service.DonationService;
+import com.test.charity_api.util.DateTimeUtil;
 
 @Service
 public class DonationServiceImpl implements DonationService {
@@ -51,7 +52,6 @@ public class DonationServiceImpl implements DonationService {
         response.setLast(result.isLast());
         return response;
     }
-
 
     @Override
     public void insert(DonationDTO d) throws ParseException {
@@ -90,6 +90,36 @@ public class DonationServiceImpl implements DonationService {
         result = donationRepository.findByCampaignIdAndDonorNameAndDateRange(campaignName, donorName, start, end, pageable);
         List<DonationDTO> content = result.getContent().stream()
                 .map(d -> DonationMapper.mapToDonationDto(d, false, true, true, false))
+                .collect(Collectors.toList());
+
+        DonationResponse response = new DonationResponse();
+        response.setContent(content);
+        response.setPageNo(pageNo + 1);
+        response.setPageSize(pageSize);
+        response.setTotalElements(result.getTotalElements());
+        response.setTotalPages(result.getTotalPages());
+        response.setLast(result.isLast());
+        return response;
+    }
+
+    @Override
+    public DonationResponse getDonationHistory(String username, int pageNo, int pageSize, String campaignName, String fromDate, String toDate) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Date from = null;
+        Date to = null;
+        try {
+            if (!fromDate.isEmpty()) {
+                from = DateTimeUtil.stringToDate(fromDate);
+            }
+            if (!toDate.isEmpty()) {
+                to = DateTimeUtil.stringToDate(toDate);
+            }
+        } catch (ParseException ex) {
+            throw new RuntimeException(ex);
+        }
+        Page<Donation> result = donationRepository.findByDonorIdAndCampaignNameAndDateRange(username, campaignName, from, to, pageable);
+        List<DonationDTO> content = result.getContent().stream()
+                .map(d -> DonationMapper.mapToDonationDto(d, true, false, false, false))
                 .collect(Collectors.toList());
 
         DonationResponse response = new DonationResponse();

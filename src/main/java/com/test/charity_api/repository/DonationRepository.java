@@ -35,14 +35,28 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
            """)
     Page<Donation> findByCampaignIdAndDonorNameIncludeAnonymousName(@Param("campaignId") Long campaignId, @Param("name") String name, Pageable pageable);
 
-       //?
-    @Query("SELECT d FROM Donation d WHERE d.campaign.name LIKE %:campaignName% AND " +
-           "(d.donorName.name LIKE %:name%) AND " +
-           "d.createdAt BETWEEN :startDate AND :endDate")
+    //?
+    @Query("SELECT d FROM Donation d WHERE d.campaign.name LIKE %:campaignName% AND "
+            + "(d.donorName.name LIKE %:name%) AND "
+            + "d.createdAt BETWEEN :startDate AND :endDate")
     Page<Donation> findByCampaignIdAndDonorNameAndDateRange(@Param("campaignName") String campaignName,
-                                                             @Param("name") String name,
-                                                             @Param("startDate") Date startDate,
-                                                             @Param("endDate") Date endDate,
-                                                             Pageable pageable);
+            @Param("name") String name,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate,
+            Pageable pageable);
+
+    @Query("""
+           SELECT d
+           FROM Donation d
+           WHERE d.donor.id = :donorId
+           AND d.campaign.name LIKE %:campaignName%
+           AND (:fromDate IS NULL AND :toDate IS NULL OR d.createdAt BETWEEN :fromDate AND :toDate)
+           ORDER BY d.createdAt DESC
+           """)
+    Page<Donation> findByDonorIdAndCampaignNameAndDateRange(@Param("donorId") String donorId,
+            @Param("campaignName") String campaignName,
+            @Param("fromDate") Date fromDate,
+            @Param("toDate") Date toDate,
+            Pageable pageable);
 
 }
