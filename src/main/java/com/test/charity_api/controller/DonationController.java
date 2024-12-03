@@ -37,15 +37,19 @@ public class DonationController {
     }
 
     //phần HuyLe
-    @GetMapping("/searchDonations")
+    @GetMapping("/search")
     public ResponseEntity<DonationResponse> searchDonations(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "campaignName", required = true) String campaignName,
+            @RequestParam(value = "campaignName", required = false) String campaignName,
             @RequestParam(value = "donorName", defaultValue = "", required = false) String donorName,
-            @RequestParam(value = "startDate", required = true) String startDate,
-            @RequestParam(value = "endDate", required = true) String endDate) {
-        return new ResponseEntity<>(donationService.searchDonations(pageNo, pageSize, campaignName, donorName, startDate, endDate), HttpStatus.OK);
+            @RequestParam(value = "fromDate", required = true) String fromDate,
+            @RequestParam(value = "toDate", required = true) String toDate) {
+        if (!fromDate.isEmpty() && !toDate.isEmpty() && (!DateTimeUtil.isISOString(fromDate) || !DateTimeUtil.isISOString(toDate))) {
+            throw new RuntimeException("Invalid fromDate or toDate");
+        }
+
+        return new ResponseEntity<>(donationService.searchDonations(pageNo, pageSize, campaignName, donorName, fromDate, toDate), HttpStatus.OK);
     }
 
     @GetMapping("/history")
@@ -62,7 +66,7 @@ public class DonationController {
         }
 
         if (!fromDate.isEmpty() && !toDate.isEmpty() && (!DateTimeUtil.isISOString(fromDate) || !DateTimeUtil.isISOString(toDate))) {
-            throw new RuntimeException("Invalid startDate or endDate");
+            throw new RuntimeException("Invalid fromDate or toDate");
         }
 
         return new ResponseEntity<>(donationService.getDonationHistory(username, pageNo, pageSize, campaignName, fromDate, toDate), HttpStatus.OK);

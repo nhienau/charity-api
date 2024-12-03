@@ -36,13 +36,30 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
     Page<Donation> findByCampaignIdAndDonorNameIncludeAnonymousName(@Param("campaignId") Long campaignId, @Param("name") String name, Pageable pageable);
 
     //?
-    @Query("SELECT d FROM Donation d WHERE d.campaign.name LIKE %:campaignName% AND "
-            + "(d.donorName.name LIKE %:name%) AND "
-            + "d.createdAt BETWEEN :startDate AND :endDate")
-    Page<Donation> findByCampaignIdAndDonorNameAndDateRange(@Param("campaignName") String campaignName,
-            @Param("name") String name,
-            @Param("startDate") Date startDate,
-            @Param("endDate") Date endDate,
+//    @Query("SELECT d FROM Donation d WHERE d.campaign.name LIKE %:campaignName% AND "
+//            + "(d.donorName.name LIKE %:name%) AND "
+//            + "d.createdAt BETWEEN :startDate AND :endDate")
+//    Page<Donation> findByCampaignNameAndDonorNameAndDateRange(@Param("campaignName") String campaignName,
+//            @Param("name") String name,
+//            @Param("startDate") Date startDate,
+//            @Param("endDate") Date endDate,
+//            Pageable pageable);
+    @Query("""
+           SELECT d
+           FROM Donation d
+           LEFT JOIN d.donorName dn
+           WHERE ((d.donorName.name LIKE %:donorName%) 
+                OR (d.showIdentity = true AND dn IS NULL AND d.donor.defaultName LIKE %:donorName%)
+                OR (:includeAnonymousDonor = true AND d.showIdentity = false))
+           AND d.campaign.name LIKE %:campaignName%
+           AND (:fromDate IS NULL AND :toDate IS NULL OR d.createdAt BETWEEN :fromDate AND :toDate)
+           ORDER BY d.createdAt DESC
+           """)
+    Page<Donation> findByDonorNameAndCampaignNameAndDateRange(@Param("donorName") String donorName,
+            @Param("campaignName") String campaignName,
+            @Param("fromDate") Date fromDate,
+            @Param("toDate") Date toDate,
+            @Param("includeAnonymousDonor") boolean includeAnonymousDonor,
             Pageable pageable);
 
     @Query("""
