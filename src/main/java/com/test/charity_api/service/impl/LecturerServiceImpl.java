@@ -46,7 +46,7 @@ public class LecturerServiceImpl implements LecturerService{
         LecturerDTO temp = new LecturerDTO();
         temp.setId(req.getId());
         temp.setName(req.getName());
-        temp.setCampaign(req.getCampaign());
+        temp.setStatus(true);
         Lecturer l = new Lecturer();
         try {
             l = LecturerMapper.mapToLecturer(temp);

@@ -1,4 +1,3 @@
-
 package com.test.charity_api.controller;
 
 import com.test.charity_api.dto.DonorDTO;
@@ -19,16 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/donor")
 public class DonorController {
+
     @Autowired
     private DonorService donorService;
-    
+
     @GetMapping("/getAll")
     public ResponseEntity<DonorResponse> getDonors(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "12", required = false) int pageSize,
-            @RequestParam(value = "query", defaultValue = "", required = false) String query
+            @RequestParam(value = "query", defaultValue = "", required = false) String query,
+            @RequestParam(value = "filter", defaultValue = "student", required = true) String filter
     ) {
-        return new ResponseEntity<>(donorService.getDonors(pageNo, pageSize, query), HttpStatus.OK);
+        // filter: students/strangers
+        return new ResponseEntity<>(donorService.getDonors(pageNo, pageSize, query, filter), HttpStatus.OK);
     }
 
     @GetMapping("/get")
@@ -39,16 +41,16 @@ public class DonorController {
 
     @PostMapping("/create")
     public String createDonor(@RequestBody DonorDTO donorDTO) {
-        if(donorService.findById(donorDTO.getId()) != null){ // trung mssv
+        if (donorService.findById(donorDTO.getId()) != null) { // trung mssv
             return "fail";
         }
         donorService.createDonor(donorDTO);
         return "success";
     }
-    
+
     @PutMapping("/update")
-    public String updateDonor(@RequestBody DonorDTO donorDTO){
-        if(donorService.findById(donorDTO.getId()) == null){
+    public String updateDonor(@RequestBody DonorDTO donorDTO) {
+        if (donorService.findById(donorDTO.getId()) == null) {
             return "fail";
         }
         donorService.updateDonor(donorDTO);
@@ -57,7 +59,7 @@ public class DonorController {
 
     @DeleteMapping("/delete")
     public String deleteDonor(@RequestParam String id) {
-        if(donorService.findById(id)==null){
+        if (donorService.findById(id) == null) {
             return "fail";
         }
         donorService.deleteDonor(id);

@@ -84,9 +84,9 @@ public class DonorServiceImpl implements DonorService {
     }
 
     @Override
-    public DonorResponse getDonors(int pageNo, int pageSize, String query) {
+    public DonorResponse getDonors(int pageNo, int pageSize, String query, String filter) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Donor> result = donorRepository.findByStatusTrueAndIdContaining(query, pageable);
+            Page<Donor> result = donorRepository.getDonors(query, filter, pageable);
         List<DonorDTO> content = result.getContent().stream()
                 .map(l -> DonorMapper.mapToDonorDto(l))
                 .collect(Collectors.toList());

@@ -34,4 +34,13 @@ public interface DonorRepository extends JpaRepository<Donor, String> {
     @Transactional
     @Query("UPDATE Donor d SET d.status = false WHERE d.id = :id")
     void deleteDonor(@Param("id") String id);
+    
+    @Query("""
+           SELECT d
+           FROM Donor d
+           LEFT JOIN d.roles r
+           WHERE ((:filter = 'students' AND d.password IS NOT NULL AND d.defaultName LIKE %:query% AND r.name = 'USER')
+                OR (:filter = 'strangers' AND d.password IS NULL))
+           """)
+    Page<Donor> getDonors(@Param("query")String query,@Param("filter") String filter, Pageable pageable);
 }

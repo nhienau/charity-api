@@ -31,6 +31,8 @@ public class CampaignServiceImpl implements CampaignService {
         temp.setTargetAmount(req.getTargetAmount());
         temp.setCreatedBy(req.getCreatedBy());
         temp.setPostId(req.getPostId());
+        temp.setDisbursementPostId(req.getDisbursementPostId());
+        temp.setPostDonationPostId(req.getPostDonationPostId());
         temp.setLecturer(req.getLecturer());
         Campaign c = new Campaign();
         try {
@@ -111,6 +113,8 @@ public class CampaignServiceImpl implements CampaignService {
         existingCampaign.setCloseDate(updatedInfo.getCloseDate());
         existingCampaign.setTargetAmount(updatedInfo.getTargetAmount());
         existingCampaign.setPostId(updatedInfo.getPostId());
+        existingCampaign.setDisbursementPostId(updatedInfo.getDisbursementPostId());
+        existingCampaign.setPostDonationPostId(updatedInfo.getPostDonationPostId());
         existingCampaign.setLecturer(updatedInfo.getLecturer());
         Campaign saved = campaignRepository.save(existingCampaign);
         return CampaignMapper.mapToCampaignDto(saved);

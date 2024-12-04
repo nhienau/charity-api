@@ -18,7 +18,7 @@ public interface DonorService {
 
     public void deleteDonor(String id);
 
-    public DonorResponse getDonors(int pageNo, int pageSize, String query);
+    public DonorResponse getDonors(int pageNo, int pageSize, String query, String filter);
 
     public DonorDTO findById(String id);
 
