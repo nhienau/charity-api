@@ -69,9 +69,9 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    public CampaignResponse getCampaigns(int pageNo, int pageSize, String query) {
+    public CampaignResponse getCampaigns(int pageNo, int pageSize, String query, String filter) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Campaign> result = campaignRepository.findByStatusTrueAndNameContainingOrderByCreatedAtDesc(query, pageable);
+        Page<Campaign> result = campaignRepository.getCampaigns(query, filter, pageable);
         List<CampaignDTO> content = result.getContent().stream()
                 .map(c -> CampaignMapper.mapToCampaignDto(c))
                 .collect(Collectors.toList());

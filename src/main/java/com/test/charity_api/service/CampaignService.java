@@ -14,7 +14,7 @@ public interface CampaignService {
 
     public CampaignDTO deleteCampaign(int id);
 
-    public CampaignResponse getCampaigns(int pageNo, int pageSize, String query);
+    public CampaignResponse getCampaigns(int pageNo, int pageSize, String query, String filter);
 
     public void updateDonation(int id, long amount);
 

@@ -39,9 +39,11 @@ public class CampaignController {
     public ResponseEntity<CampaignResponse> getCampaigns(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "12", required = false) int pageSize,
-            @RequestParam(value = "query", defaultValue = "", required = false) String query
+            @RequestParam(value = "query", defaultValue = "", required = false) String query,
+            @RequestParam(value = "filter", defaultValue = "all", required = true) String filter
     ) {
-        return new ResponseEntity<>(campaignService.getCampaigns(pageNo, pageSize, query), HttpStatus.OK);
+        // filter: all/opening/closed/fulfilled
+        return new ResponseEntity<>(campaignService.getCampaigns(pageNo, pageSize, query, filter), HttpStatus.OK);
     }
 
     @GetMapping("/get")
