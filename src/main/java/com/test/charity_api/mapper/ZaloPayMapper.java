@@ -14,7 +14,8 @@ public class ZaloPayMapper {
                 put("campaignId", req.getCampaignId());
                 put("donorId", req.getDonorId());
                 put("phoneNumber", req.getPhoneNumber());
-                put("name", HtmlUtil.escapeHTML(req.getName()));
+                put("donorName", HtmlUtil.escapeHTML(req.getDonorName()));
+                put("donorNameId", req.getDonorNameId());
                 put("showIdentity", req.isShowIdentity());
                 put("amount", req.getAmount());
             }
@@ -36,9 +37,15 @@ public class ZaloPayMapper {
             dto.setPhoneNumber(obj.getString("phoneNumber"));
         }
 
-        if (obj.has("name")) {
-            dto.setName(obj.getString("name"));
+        if (obj.has("donorName")) {
+            dto.setDonorName(obj.getString("donorName"));
         }
+
+        Integer donorNameId = null;
+        if (obj.has("donorNameId") && !obj.isNull("donorNameId")) {
+            donorNameId = obj.getInt("donorNameId");
+        }
+        dto.setDonorNameId(donorNameId);
 
         if (obj.has("showIdentity")) {
             dto.setShowIdentity(obj.getBoolean("showIdentity"));

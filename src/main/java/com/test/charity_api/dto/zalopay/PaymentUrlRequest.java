@@ -14,7 +14,8 @@ public class PaymentUrlRequest {
     private int campaignId;
     private String donorId;
     private String phoneNumber;
-    private String name;
+    private Integer donorNameId;
+    private String donorName;
     private boolean showIdentity;
     private long amount;
 }

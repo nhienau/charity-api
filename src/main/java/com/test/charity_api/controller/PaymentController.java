@@ -109,7 +109,8 @@ public class PaymentController {
         int campaignId = data.getCampaignId();
         String reqDonorId = data.getDonorId();
         String phoneNumber = data.getPhoneNumber();
-        String name = HtmlUtil.unescapeHTML(data.getName());
+        String reqDonorName = HtmlUtil.unescapeHTML(data.getDonorName());
+        Integer reqDonorNameId = data.getDonorNameId();
         boolean showIdentity = data.isShowIdentity();
         long amount = data.getAmount();
 
@@ -130,10 +131,19 @@ public class PaymentController {
         String donorId = donor.getId();
         DonorNameDTO donorName = null;
         if (reqDonorId == null && showIdentity) {
-            donorName = donorNameService.findByNameAndDonorId(name, donorId);
+//            donorName = donorNameService.findByNameAndDonorId(name, donorId);
+//            if (donorName == null) {
+//                DonorNameDTO temp = new DonorNameDTO();
+//                temp.setName(name);
+//                temp.setDonor(donor);
+//                donorName = donorNameService.insert(temp);
+//            }
+            if (reqDonorNameId != null) {
+                donorName = donorNameService.findById(reqDonorNameId);
+            }
             if (donorName == null) {
                 DonorNameDTO temp = new DonorNameDTO();
-                temp.setName(name);
+                temp.setName(reqDonorName);
                 temp.setDonor(donor);
                 donorName = donorNameService.insert(temp);
             }

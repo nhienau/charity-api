@@ -18,6 +18,8 @@ public class CampaignDTO {
     private long currentAmount = 0;
     private int donationCount = 0;
     private Integer postId;
+    private Integer disbursementPostId;
+    private Integer postDonationPostId;
     private int createdBy;
     private LecturerDTO lecturer;
     private boolean status = true;

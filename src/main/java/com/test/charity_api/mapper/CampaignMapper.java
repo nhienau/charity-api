@@ -29,6 +29,8 @@ public class CampaignMapper {
         entity.setCurrentAmount(c.getCurrentAmount());
         entity.setDonationCount(c.getDonationCount());
         entity.setPostId(c.getPostId());
+        entity.setDisbursementPostId(c.getDisbursementPostId());
+        entity.setPostDonationPostId(c.getPostDonationPostId());
         entity.setCreatedBy(createdBy);
         entity.setLecturer(LecturerMapper.mapToLecturer(c.getLecturer()));
         entity.setStatus(c.isStatus());
@@ -49,6 +51,8 @@ public class CampaignMapper {
         entity.setCurrentAmount(c.getCurrentAmount());
         entity.setDonationCount(c.getDonationCount());
         entity.setPostId(c.getPostId());
+        entity.setDisbursementPostId(c.getDisbursementPostId());
+        entity.setPostDonationPostId(c.getPostDonationPostId());
         entity.setCreatedBy(c.getCreatedBy().getId());
         entity.setLecturer(LecturerMapper.mapToLecturerDto(c.getLecturer()));
         entity.setCampaignImage(c.getCampaignImage().stream().map(i -> CampaignImageMapper.mapToCampaignImageDto(i)).collect(Collectors.toList()));

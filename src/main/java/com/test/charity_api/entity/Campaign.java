@@ -48,6 +48,10 @@ public class Campaign {
     private int donationCount;
     @Column
     private Integer postId;
+    @Column
+    private Integer disbursementPostId;
+    @Column
+    private Integer postDonationPostId;
     @Column(nullable = false)
     private boolean status;
 
