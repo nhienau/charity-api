@@ -66,7 +66,7 @@ public class DonationServiceImpl implements DonationService {
 
     // phần huyle
     @Override
-    public DonationResponse searchDonations(int pageNo, int pageSize, String campaignName, String donorName, String startDate, String endDate) {
+    public DonationResponse searchDonations(int pageNo, int pageSize, String phoneNumber, String campaignName, String donorName, String startDate, String endDate) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Date start = null;
         Date end = null;
@@ -98,7 +98,7 @@ public class DonationServiceImpl implements DonationService {
         
         boolean includeAnonymousDonor = "nhà hảo tâm".contains(donorNameQueryStr) || "nha hao tam".contains(donorNameQueryStr);
 
-        result = donationRepository.findByDonorNameAndCampaignNameAndDateRange(donorName, campaignName, start, end, includeAnonymousDonor, pageable);
+        result = donationRepository.searchDonations(phoneNumber, donorName, campaignName, start, end, includeAnonymousDonor, pageable);
         List<DonationDTO> content = result.getContent().stream()
                 .map(d -> DonationMapper.mapToDonationDto(d, true, true, true, false))
                 .collect(Collectors.toList());

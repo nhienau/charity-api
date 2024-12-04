@@ -41,6 +41,7 @@ public class DonationController {
     public ResponseEntity<DonationResponse> searchDonations(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
             @RequestParam(value = "campaignName", required = false) String campaignName,
             @RequestParam(value = "donorName", defaultValue = "", required = false) String donorName,
             @RequestParam(value = "fromDate", required = true) String fromDate,
@@ -49,7 +50,7 @@ public class DonationController {
             throw new RuntimeException("Invalid fromDate or toDate");
         }
 
-        return new ResponseEntity<>(donationService.searchDonations(pageNo, pageSize, campaignName, donorName, fromDate, toDate), HttpStatus.OK);
+        return new ResponseEntity<>(donationService.searchDonations(pageNo, pageSize, phoneNumber, campaignName, donorName, fromDate, toDate), HttpStatus.OK);
     }
 
     @GetMapping("/history")

@@ -48,14 +48,16 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
            SELECT d
            FROM Donation d
            LEFT JOIN d.donorName dn
-           WHERE ((d.donorName.name LIKE %:donorName%) 
+           WHERE ((:phoneNumber IS NULL OR :phoneNumber = '' OR d.donor.phoneNumber LIKE :phoneNumber)
+                AND ((d.donorName.name LIKE %:donorName%) 
                 OR (d.showIdentity = true AND dn IS NULL AND d.donor.defaultName LIKE %:donorName%)
-                OR (:includeAnonymousDonor = true AND d.showIdentity = false))
+                OR (:includeAnonymousDonor = true AND d.showIdentity = false)))
            AND d.campaign.name LIKE %:campaignName%
            AND (:fromDate IS NULL AND :toDate IS NULL OR d.createdAt BETWEEN :fromDate AND :toDate)
            ORDER BY d.createdAt DESC
            """)
-    Page<Donation> findByDonorNameAndCampaignNameAndDateRange(@Param("donorName") String donorName,
+    Page<Donation> searchDonations(@Param("phoneNumber") String phoneNumber,
+            @Param("donorName") String donorName,
             @Param("campaignName") String campaignName,
             @Param("fromDate") Date fromDate,
             @Param("toDate") Date toDate,
