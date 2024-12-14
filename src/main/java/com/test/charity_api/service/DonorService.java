@@ -2,6 +2,7 @@ package com.test.charity_api.service;
 
 import com.test.charity_api.dto.DonorDTO;
 import com.test.charity_api.dto.DonorResponse;
+import com.test.charity_api.entity.Donor;
 import java.util.List;
 
 public interface DonorService {
@@ -16,7 +17,7 @@ public interface DonorService {
 
     public void updateDonor(DonorDTO d);
 
-    public void deleteDonor(String id);
+    public Donor deleteDonor(String id);
 
     public DonorResponse getDonors(int pageNo, int pageSize, String query, String filter);
 
@@ -25,4 +26,6 @@ public interface DonorService {
     public DonorDTO FindUser(String username);
 
     public void updatePassword(String username, String newPassword) throws Exception;
+    
+    public boolean existsById(String id);
 }

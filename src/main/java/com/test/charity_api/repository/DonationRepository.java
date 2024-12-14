@@ -67,6 +67,7 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
     @Query("""
            SELECT d
            FROM Donation d
+           LEFT JOIN d.donorName dn
            WHERE d.donor.id = :donorId
            AND d.campaign.name LIKE %:campaignName%
            AND (:fromDate IS NULL AND :toDate IS NULL OR d.createdAt BETWEEN :fromDate AND :toDate)

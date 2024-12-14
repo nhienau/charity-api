@@ -130,7 +130,7 @@ public class DonationServiceImpl implements DonationService {
         }
         Page<Donation> result = donationRepository.findByDonorIdAndCampaignNameAndDateRange(username, campaignName, from, to, pageable);
         List<DonationDTO> content = result.getContent().stream()
-                .map(d -> DonationMapper.mapToDonationDto(d, true, false, false, false))
+                .map(d -> DonationMapper.mapToDonationDto(d, true, true, true, false))
                 .collect(Collectors.toList());
 
         DonationResponse response = new DonationResponse();

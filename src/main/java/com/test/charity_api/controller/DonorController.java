@@ -2,6 +2,8 @@ package com.test.charity_api.controller;
 
 import com.test.charity_api.dto.DonorDTO;
 import com.test.charity_api.dto.DonorResponse;
+import com.test.charity_api.entity.Donor;
+import com.test.charity_api.mapper.DonorMapper;
 import com.test.charity_api.service.DonorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,7 @@ public class DonorController {
             @RequestParam(value = "query", defaultValue = "", required = false) String query,
             @RequestParam(value = "filter", defaultValue = "student", required = true) String filter
     ) {
-        // filter: students/strangers
+        // filter: all/students/strangers
         return new ResponseEntity<>(donorService.getDonors(pageNo, pageSize, query, filter), HttpStatus.OK);
     }
 
@@ -40,12 +42,12 @@ public class DonorController {
     }
 
     @PostMapping("/create")
-    public String createDonor(@RequestBody DonorDTO donorDTO) {
-        if (donorService.findById(donorDTO.getId()) != null) { // trung mssv
-            return "fail";
+    public DonorDTO createDonor(@RequestBody DonorDTO donorDTO) {
+        if (donorService.existsById(donorDTO.getId())) {
+            return null;
         }
-        donorService.createDonor(donorDTO);
-        return "success";
+        DonorDTO result = donorService.insertDonor(donorDTO);
+        return result;
     }
 
     @PutMapping("/update")
@@ -58,11 +60,11 @@ public class DonorController {
     }
 
     @DeleteMapping("/delete")
-    public String deleteDonor(@RequestParam String id) {
+    public DonorDTO deleteDonor(@RequestParam String id) {
         if (donorService.findById(id) == null) {
-            return "fail";
+            return null;
         }
-        donorService.deleteDonor(id);
-        return "success";
+        Donor donor = donorService.deleteDonor(id);
+        return DonorMapper.mapToDonorDto(donor);
     }
 }

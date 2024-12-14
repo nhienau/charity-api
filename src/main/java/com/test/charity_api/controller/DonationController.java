@@ -72,4 +72,18 @@ public class DonationController {
 
         return new ResponseEntity<>(donationService.getDonationHistory(username, pageNo, pageSize, campaignName, fromDate, toDate), HttpStatus.OK);
     }
+    
+    @GetMapping("/userDonation")
+    public ResponseEntity<DonationResponse> getDonationByDonorId(
+            @RequestParam(value = "donorId", required = true) String donorId,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "campaignName", required = false) String campaignName,
+            @RequestParam(value = "fromDate", required = false) String fromDate,
+            @RequestParam(value = "toDate", required = false) String toDate) {
+        if (!fromDate.isEmpty() && !toDate.isEmpty() && (!DateTimeUtil.isISOString(fromDate) || !DateTimeUtil.isISOString(toDate))) {
+            throw new RuntimeException("Invalid fromDate or toDate");
+        }
+        return new ResponseEntity<>(donationService.getDonationHistory(donorId, pageNo, pageSize, campaignName, fromDate, toDate), HttpStatus.OK);
+    }
 }
